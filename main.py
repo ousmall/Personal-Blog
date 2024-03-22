@@ -12,6 +12,7 @@ from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactF
 from hashlib import md5
 from secret import SMTP_SERVER, SMTP_PORT, MY_EMAIL, MY_PASS
 import smtplib
+import os
 
 
 year = date.today().year
@@ -101,7 +102,7 @@ def only_commenter(function):
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
@@ -111,7 +112,9 @@ class Base(DeclarativeBase):
     pass
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+# if environment variable "DB_URI" exist, use it. If not, use latter,
+# and we can assign "DB_URI" for any value we want
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', 'sqlite:///posts.db')
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
