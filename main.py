@@ -144,7 +144,7 @@ class BlogPost(db.Model):
     comments = relationship("Comment", back_populates="comment_post")
 
 
-# TODO: Create a User table for all your registered users.
+# Create a User table for all your registered users.
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
